@@ -21,11 +21,13 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         />
-    <include
+    <TextView
         android:id="@+id/divider_one"
-        layout="@layout/number_display"
         app:layout_constraintLeft_toRightOf="@id/secondnumber"
-        android:layout_width="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text=":"
+        android:textSize="50sp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
     <include
@@ -42,11 +44,14 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         />
-    <include
+    <TextView
         android:id="@+id/divider_two"
         layout="@layout/number_display"
         app:layout_constraintLeft_toRightOf="@id/fourthnumber"
-        android:layout_width="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text=":"
+        android:textSize="50sp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
     <include

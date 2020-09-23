@@ -6,6 +6,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.widget.TextView;
 
 public class TimerActivity extends AppCompatActivity {
@@ -18,6 +20,8 @@ public class TimerActivity extends AppCompatActivity {
     private int minutes;
     private int seconds;
     private int hours;
+
+    private TimerThread timerThread;
 
     private TextView seconds1;
     private TextView seconds2;
@@ -47,9 +51,13 @@ public class TimerActivity extends AppCompatActivity {
         } catch (NullPointerException e) {
             createErrorDialog(getString(R.string.textviews_not_found));
         }
+
+        TimerResultReceiver receiver = new TimerResultReceiver(new Handler());
+
+        TimrIntentService.startTimer(this, new Timer(seconds, minutes, hours), receiver);
     }
 
-    private void drawClock(int seconds, int minutes, int hours) {
+    void drawClock(int seconds, int minutes, int hours) {
         //TODO: Ressourcestrings with placeholders
         hours1.setText("" + (hours / 10));
         hours2.setText("" + (hours % 10));
@@ -88,5 +96,28 @@ public class TimerActivity extends AppCompatActivity {
                 });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+
+
+    protected class TimerResultReceiver extends ResultReceiver {
+
+        protected static final int RUNNING = 1;
+
+        public TimerResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            if (resultCode == RUNNING) {
+                if (resultData == null)
+                    throw new NullPointerException();//TODO: Abfangen - aber wo?
+                int seconds = resultData.getInt(SECONDS);
+                int minutes = resultData.getInt(MINUTES);
+                int hours = resultData.getInt(HOURS);
+                drawClock(seconds, minutes, hours);
+            }
+        }
     }
 }
