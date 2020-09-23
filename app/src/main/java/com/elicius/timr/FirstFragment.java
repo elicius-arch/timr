@@ -1,6 +1,7 @@
 package com.elicius.timr;
 
 import android.os.Bundle;
+import android.service.autofill.Dataset;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,11 +9,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
 public class FirstFragment extends Fragment {
+
+    private RecyclerView recyclerView;
+    private MyAdapter myAdapter;
+    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     public View onCreateView(
@@ -27,11 +33,16 @@ public class FirstFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ArrayList<View> arrayList = new ArrayList<>();
-        View view1 = LayoutInflater.from(getContext()).inflate(R.layout.timer_view, null);
-        arrayList.add(view1);
+        String[] dataset = new String[5];
+        for (int i = 0; i < 5; i++)
+            dataset[i] = "" + i;
 
-        RecyclerView recyclerView = ((MainActivity) getContext()).findViewById(R.id.timer_recyclerView);
-        recyclerView.addFocusables(arrayList, View.FOCUS_DOWN);
+        myAdapter = new MyAdapter(dataset);
+
+        recyclerView = ((MainActivity) getContext()).findViewById(R.id.timer_recyclerView);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(myAdapter);
     }
 }
