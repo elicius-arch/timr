@@ -12,16 +12,17 @@ import android.content.Context;
  * helper methods.
  */
 public class TimrIntentService extends IntentService {
-    // TODO: Rename actions, choose action names that describe tasks that this
+
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
     private static final String START_TIMR = "com.elicius.timr.action.START_TIMR";
+    private static final String STOP_TIMR = "com.elicius.timr.action.STOP_TIMR";
 
-    // TODO: Rename parameters
     private static final String SECONDS = "com.elicius.timr.extra.SECONDS";
     private static final String MINUTES = "com.elicius.timr.extra.MINUTES";
     private static final String HOURS = "com.elicius.timr.extra.HOURS";
 
-    private TimerThread timerThread;
+    //TODO: Alternative zur statischen Lösung
+    private static TimerThread timerThread;
     private static TimerActivity.TimerResultReceiver receiver;
 
     public TimrIntentService() {
@@ -34,7 +35,6 @@ public class TimrIntentService extends IntentService {
      *
      * @see IntentService
      */
-    // TODO: Customize helper method
     public static void startTimer(Context context, Timer timer, TimerActivity.TimerResultReceiver resultreceiver) {
         Intent intent = new Intent(context, TimrIntentService.class);
         intent.setAction(START_TIMR);
@@ -47,6 +47,15 @@ public class TimrIntentService extends IntentService {
         context.startService(intent);
     }
 
+    public static void stopTimer(Context context, TimerActivity.TimerResultReceiver resultReceiver) {
+        Intent intent = new Intent(context, TimrIntentService.class);
+        intent.setAction(STOP_TIMR);
+
+        receiver = resultReceiver;      //eigentlich unnötig, aber sicherheitshalber doch nochmal hingeschrieben
+
+        context.startService(intent);
+    }
+
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
@@ -55,17 +64,19 @@ public class TimrIntentService extends IntentService {
                 final int seconds = intent.getIntExtra(SECONDS, 0);
                 final int minutes = intent.getIntExtra(MINUTES, 0);
                 final int hours = intent.getIntExtra(HOURS, 0);
-                handleActionFoo(seconds, minutes, hours);
+                handleActionStart(seconds, minutes, hours);
+            } else if (STOP_TIMR.equals(action)) {
+                handleActionStop();
             }
         }
     }
 
-    /**
-     * Handle action Foo in the provided background thread with the provided
-     * parameters.
-     */
-    private void handleActionFoo(int seconds, int minutes, int hours) {
+    private void handleActionStart(int seconds, int minutes, int hours) {
         timerThread = new TimerThread(seconds, minutes, hours, receiver);
         timerThread.start();
+    }
+
+    private void handleActionStop() {
+            timerThread.terminate();
     }
 }

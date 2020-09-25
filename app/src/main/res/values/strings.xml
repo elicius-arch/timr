@@ -2,5 +2,13 @@
     <string name="app_name">Timer</string>
     <string name="action_settings">Einstellungen</string>
     <string name="values_not_found">Die zu übergebenden Werte konnten nicht gefunden werden!</string>
-    <string name="textviews_not_found">Eine Bildschirmkomponente wurde nicht gefunden!</string>
+    <string name="textview_not_found">Eine Bildschirmkomponente wurde nicht gefunden!</string>
+    <string name="button_not_found">Ein Button konnte nicht gefunden werden</string>
+    <string name="timer_finished">Timer fertig</string>
+    <string name="error">Fehler</string>
+    <string name="finished">Ende</string>
+    <string name="new_timr">Erstellen Sie einen neuen Timer</string>
+    <string name="seconds">Sekunden</string>
+    <string name="minutes">Minuten</string>
+    <string name="hours">Stunden</string>
 </resources>

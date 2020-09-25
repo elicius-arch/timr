@@ -14,47 +14,43 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
+        android:focusable="true"
         android:clickable="true"
-        android:backgroundTint="@color/red"
+        app:backgroundTint="@color/red"
         app:srcCompat="@android:drawable/ic_media_play"
-        android:layout_margin="5dp"
-         />
+        android:layout_margin="5dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/button_stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:backgroundTint="@color/red"
+        android:clickable="false"
+        app:backgroundTint="@color/gray"
         app:srcCompat="@android:drawable/ic_media_pause"
         app:layout_constraintLeft_toRightOf="@id/button_play"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="5dp"
-
-        />
+        android:layout_margin="5dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/button_end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:backgroundTint="@color/red"
+        android:clickable="false"
+        app:backgroundTint="@color/gray"
         app:srcCompat="?android:attr/listChoiceIndicatorMultiple"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/button_stop"
-        android:layout_margin="5dp"
-        />
+        android:layout_margin="5dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/button_reset"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:backgroundTint="@color/red"
+        android:clickable="false"
+        app:backgroundTint="@color/gray"
         app:srcCompat="@android:drawable/ic_menu_rotate"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/button_end"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_margin="5dp"
-        />
+        android:layout_margin="5dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
