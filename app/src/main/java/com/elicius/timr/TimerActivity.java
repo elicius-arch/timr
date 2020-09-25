@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.os.Build;
@@ -61,20 +62,20 @@ public class TimerActivity extends AppCompatActivity {
             seconds = actualSeconds = values.getInt(SECONDS);
             hours = actualHours = values.getInt(HOURS);
         } catch (NullPointerException e) {
-            createErrorDialog(getString(R.string.values_not_found));
+            createErrorDialog(getString(R.string.values_not_found), this);
         }
         try {
             setTextViews();
             drawClock(seconds, minutes, hours);
         } catch (NullPointerException e) {
-            createErrorDialog(getString(R.string.textview_not_found));
+            createErrorDialog(getString(R.string.textview_not_found), this);
         }
 
         try {
             setButtons();
             setListeners();
         } catch (NullPointerException e) {
-            createErrorDialog(getString(R.string.button_not_found));
+            createErrorDialog(getString(R.string.button_not_found), this);
         }
     }
 
@@ -147,15 +148,18 @@ public class TimerActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    private void createErrorDialog(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    public static void createErrorDialog(String message, final AppCompatActivity activity) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setMessage(message)
                 .setTitle(R.string.error)
-                .setPositiveButton(OK, new DialogInterface.OnClickListener() {
+                .setPositiveButton(activity.getString(R.string.ok), new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        TimerActivity.this.finish();
+                        if (activity.getClass().equals(TimerActivity.class))
+                            activity.finish();
+                        else
+                            dialog.dismiss();
                     }
                 });
         AlertDialog alertDialog = builder.create();

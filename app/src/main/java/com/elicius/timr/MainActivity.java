@@ -26,13 +26,18 @@ import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
     private SQLHandler sqlHandler;
+
+    private Timer[] dataset;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         sqlHandler = new SQLHandler(this);
-        Timer[] dataset = sqlHandler.selectAll();
+        dataset = sqlHandler.selectAll();
 
         //Timer[] dataset = new Timer[1];
         //dataset[0] = new Timer(5, 0, 0);
@@ -61,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        RecyclerView.Adapter adapter = new MyAdapter(dataset, this);
+        adapter = new MyAdapter(dataset, this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -96,47 +101,73 @@ public class MainActivity extends AppCompatActivity {
 
     private void createNewTimer() {
         LayoutInflater inflater = getLayoutInflater();
-        ConstraintLayout layout = (ConstraintLayout) inflater.inflate(R.layout.new_timer, null);
+        final ConstraintLayout layout = (ConstraintLayout) inflater.inflate(R.layout.new_timer, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setView(layout);
-        AlertDialog dialog = builder.create();
+        final AlertDialog dialog = builder.create();
 
 
-        Spinner second = layout.findViewById(R.id.new_second);
-        Spinner minute = layout.findViewById(R.id.new_minute);
-        Spinner hour = layout.findViewById(R.id.new_hour);
+        final Spinner second = layout.findViewById(R.id.new_second);
+        final Spinner minute = layout.findViewById(R.id.new_minute);
+        final Spinner hour = layout.findViewById(R.id.new_hour);
         second.setContentDescription(getString(R.string.seconds));
         minute.setContentDescription(getString(R.string.minutes));
         hour.setContentDescription(getString(R.string.hours));
 
-        ArrayList<View> seconds = new ArrayList<View>();
+        ArrayList<Integer> seconds = new ArrayList<Integer>();
         for (int i = 0; i <= 59; i++) {
-            View view = createSelect_View(i, inflater);
-            seconds.add(view);
+            seconds.add(i);
         }
-        ArrayList<View> minutes = new ArrayList<View>();
+        ArrayList<Integer> minutes = new ArrayList<Integer>();
         for (int i = 0; i <= 59; i++) {
-            View view = createSelect_View(i, inflater);
-            minutes.add(view);
+            minutes.add(i);
         }
-        ArrayList<View> hours = new ArrayList<View>();
-        for (int i = 0; i <= 100; i++) {
-            View view = createSelect_View(i, inflater);
-            hours.add(view);
+        ArrayList<Integer> hours = new ArrayList<Integer>();
+        for (int i = 0; i < 100; i++) {
+            hours.add(i);
         }
         ArrayAdapter aas = new ArrayAdapter(this, R.layout.spinner_dropdown_resource, seconds);
         ArrayAdapter aam = new ArrayAdapter(this, R.layout.spinner_dropdown_resource, minutes);
         ArrayAdapter aah = new ArrayAdapter(this, R.layout.spinner_dropdown_resource, hours);
         second.setAdapter(aas);
-        minute.addChildrenForAccessibility(minutes);
-        hour.addChildrenForAccessibility(hours);
-        dialog.show();
-    }
+        minute.setAdapter(aam);
+        hour.setAdapter(aah);
 
-    private View createSelect_View(int i, LayoutInflater inflater) {
-        View spinnerView = inflater.inflate(R.layout.select_view, null);
-        TextView textView = spinnerView.findViewById(R.id.text_view);
-        textView.setText("" + i);
-        return spinnerView;
+        Button okButton = layout.findViewById(R.id.button_ok);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int s = (int) second.getSelectedItem();
+                int m = (int) minute.getSelectedItem();
+                int h = (int) hour.getSelectedItem();
+
+                if (s == 0 && m == 0 && h == 0) {
+                    dialog.dismiss();
+                    TimerActivity.createErrorDialog(MainActivity.this.getString(R.string.null_timer), MainActivity.this);
+                } else {
+
+                    Timer timer = new Timer(s, m, h);
+
+                    if (dataset != null) {
+                        Timer[] datasetCopy = dataset.clone();
+                        dataset = new Timer[dataset.length + 1];
+                        for (int i = 0; i < datasetCopy.length; i++) {
+                            dataset[i] = datasetCopy[i];
+                        }
+                        dataset[dataset.length - 1] = timer;
+                    } else {
+                        dataset = new Timer[1];
+                        dataset[0] = timer;
+                    }
+                    sqlHandler.insertOne(timer);
+                    adapter = new MyAdapter(dataset, MainActivity.this);
+                    recyclerView.setAdapter(adapter);
+                    Toast.makeText(MainActivity.this, "neuen Timer erstellt", Toast.LENGTH_SHORT);
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        dialog.show();
     }
 }

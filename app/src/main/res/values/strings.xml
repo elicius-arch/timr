@@ -11,4 +11,6 @@
     <string name="seconds">Sekunden</string>
     <string name="minutes">Minuten</string>
     <string name="hours">Stunden</string>
+    <string name="ok">OK</string>
+    <string name="null_timer">Ein Timer 0:0:0 ist unsinnig!</string>
 </resources>
