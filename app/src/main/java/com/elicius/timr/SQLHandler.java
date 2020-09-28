@@ -67,12 +67,19 @@ public class SQLHandler extends SQLiteOpenHelper {
     }
 
     public Timer[] selectAll() {
-        long rowId = -1;
         Timer[] timers = null;
         try {
             SQLiteDatabase db = getWritableDatabase();
             String[] colums = {SECOND, MINUTE, HOUR};
-            Cursor cursor = db.query(true, TABLE_NAME_TIMR, colums, null, null, null, null, null, null);
+            Cursor cursor = db.query(true,
+                    TABLE_NAME_TIMR,
+                    colums,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null);
             int secondColIndex = cursor.getColumnIndex(SECOND);
             int minuteColIndex = cursor.getColumnIndex(MINUTE);
             int hourColIndex = cursor.getColumnIndex(HOUR);
@@ -91,7 +98,7 @@ public class SQLHandler extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            return null;
+            return timers;
         }
     }
 }

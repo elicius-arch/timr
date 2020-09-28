@@ -17,7 +17,7 @@
         android:focusable="true"
         android:clickable="true"
         app:backgroundTint="@color/red"
-        app:srcCompat="@android:drawable/ic_media_play"
+        app:srcCompat="@drawable/play_symbol"
         android:layout_margin="5dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:clickable="false"
         app:backgroundTint="@color/gray"
-        app:srcCompat="@android:drawable/ic_media_pause"
+        app:srcCompat="@drawable/stop_symbol"
         app:layout_constraintLeft_toRightOf="@id/button_play"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_margin="5dp" />
@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:clickable="false"
         app:backgroundTint="@color/gray"
-        app:srcCompat="?android:attr/listChoiceIndicatorMultiple"
+        app:srcCompat="@drawable/end_symbol"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/button_stop"
         android:layout_margin="5dp" />
@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:clickable="false"
         app:backgroundTint="@color/gray"
-        app:srcCompat="@android:drawable/ic_menu_rotate"
+        app:srcCompat="@drawable/reset_symbol"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/button_end"
         app:layout_constraintRight_toRightOf="parent"

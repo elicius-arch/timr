@@ -57,23 +57,18 @@ public class MainActivity extends AppCompatActivity {
         });
 
         sqlHandler = new SQLHandler(this);
-        dataset = sqlHandler.selectAll();
-
-        //Timer[] dataset = new Timer[1];
-        //dataset[0] = new Timer(5, 0, 0);
-
-        recyclerView = findViewById(R.id.timer_recyclerView);
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter = new MyAdapter(dataset, this);
-        recyclerView.setAdapter(adapter);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         sqlHandler.close();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        selectDBAndInitializeRecyclerView();
     }
 
     //TODO: Menü füllen
@@ -97,6 +92,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void selectDBAndInitializeRecyclerView() {
+        //sqlHandler = new SQLHandler(this);
+        dataset = sqlHandler.selectAll();
+
+        //Timer[] dataset = new Timer[1];
+        //dataset[0] = new Timer(5, 0, 0);
+
+        recyclerView = findViewById(R.id.timer_recyclerView);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new MyAdapter(dataset, this);
+        recyclerView.setAdapter(adapter);
     }
 
     private void createNewTimer() {
@@ -142,11 +152,17 @@ public class MainActivity extends AppCompatActivity {
                 int h = (int) hour.getSelectedItem();
 
                 if (s == 0 && m == 0 && h == 0) {
-                    dialog.dismiss();
                     TimerActivity.createErrorDialog(MainActivity.this.getString(R.string.null_timer), MainActivity.this);
                 } else {
 
                     Timer timer = new Timer(s, m, h);
+
+                    for (Timer t : dataset) {
+                        if (t.equals(timer)) {
+                            TimerActivity.createErrorDialog(getString(R.string.times_exists, timer.toString()), MainActivity.this);
+                            return;
+                        }
+                    }
 
                     if (dataset != null) {
                         Timer[] datasetCopy = dataset.clone();
@@ -162,7 +178,8 @@ public class MainActivity extends AppCompatActivity {
                     sqlHandler.insertOne(timer);
                     adapter = new MyAdapter(dataset, MainActivity.this);
                     recyclerView.setAdapter(adapter);
-                    Toast.makeText(MainActivity.this, "neuen Timer erstellt", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(MainActivity.this, "neuen Timer erstellt", Toast.LENGTH_SHORT);
+                    toast.show();
                     dialog.dismiss();
                 }
             }

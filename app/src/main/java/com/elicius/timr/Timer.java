@@ -23,6 +23,10 @@ public class Timer {
         return hours;
     }
 
+    public boolean equals(Timer timer) {
+        return timer.seconds == seconds && timer.minutes == minutes && timer.hours == hours;
+    }
+
     public String toString() {
         return hours + " : " + minutes + " : " + seconds;
     }
