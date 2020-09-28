@@ -1,5 +1,7 @@
 package com.elicius.timr;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -54,6 +56,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         // - replace the contents of the view with that element
         holder.textView.setText(mDataset[position].toString());
         holder.textView.setOnClickListener(new ViewClickListener(mDataset[position]));
+        holder.textView.setOnLongClickListener(new ViewLongClickListener(mDataset[position]));
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -82,6 +85,55 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             bundle.putInt(TimerActivity.HOURS, timer.getHours());
             intent.putExtra(TimerActivity.VALUES, bundle);
             activity.startActivity(intent);
+        }
+
+    }
+
+    private class ViewLongClickListener implements View.OnLongClickListener {
+
+        private Timer timer;
+
+        public ViewLongClickListener(Timer timer) {
+            this.timer = timer;
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            builder.setTitle(activity.getString(R.string.delete))
+                    .setMessage(activity.getString(R.string.delete_text, timer.toString()))
+            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    deleteTimerFromList(timer);
+                    dialog.dismiss();
+                }
+            })
+            .setNegativeButton(R.string.quit, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            return false;
+        }
+        private void deleteTimerFromList(Timer timer) {
+            Timer[] dataset = MyAdapter.this.mDataset;
+            Timer[] newDataset = new Timer[dataset.length - 1];
+            int i = 0;
+            for (Timer t : dataset) {
+                if (!t.equals(timer)) {
+                    newDataset[i] = t;
+                    i++;
+                }
+            }
+            MyAdapter.this.mDataset=  newDataset;
+            MyAdapter.this.notifyDataSetChanged();
+            SQLHandler sqlHandler = activity.getSQLHandler();
+            sqlHandler.deleteTimer(timer);
         }
     }
 }

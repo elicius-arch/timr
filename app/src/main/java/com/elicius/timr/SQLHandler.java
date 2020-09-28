@@ -101,4 +101,10 @@ public class SQLHandler extends SQLiteOpenHelper {
             return timers;
         }
     }
+
+    public void deleteTimer(Timer timer) {
+            SQLiteDatabase db = getReadableDatabase();
+            db.delete(TABLE_NAME_TIMR, SECOND + " = " + timer.getSeconds() + " AND "
+            + MINUTE + " = " + timer.getMinutes() + " AND " + HOUR + " = " + timer.getHours() + ";", null);
+    }
 }
