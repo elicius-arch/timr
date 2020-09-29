@@ -51,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
                 createNewTimer();
             }
         });
@@ -63,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        //TODO: auf Sinnhaftigkeit überprüfen
         sqlHandler.close();
     }
 
@@ -96,11 +95,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void selectDBAndInitializeRecyclerView() {
-        //sqlHandler = new SQLHandler(this);
         dataset = sqlHandler.selectAll();
-
-        //Timer[] dataset = new Timer[1];
-        //dataset[0] = new Timer(5, 0, 0);
 
         recyclerView = findViewById(R.id.timer_recyclerView);
         recyclerView.setHasFixedSize(true);
@@ -192,5 +187,9 @@ public class MainActivity extends AppCompatActivity {
 
     public SQLHandler getSQLHandler() {
         return sqlHandler;
+    }
+
+    public void setDataset(Timer[] timers) {
+        dataset = timers;
     }
 }

@@ -131,6 +131,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 }
             }
             MyAdapter.this.mDataset=  newDataset;
+            activity.setDataset(newDataset);
             MyAdapter.this.notifyDataSetChanged();
             SQLHandler sqlHandler = activity.getSQLHandler();
             sqlHandler.deleteTimer(timer);
