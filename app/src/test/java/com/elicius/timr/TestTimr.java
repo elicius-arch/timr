@@ -22,7 +22,11 @@ public class TestTimr {
     @Test
     public void testToString() {
         Timer timer = new Timer(1, 2, 3);
-        assertEquals("toString-Methode funktioniert nicht", timer.toString(), "3 : 2 : 1");
+        assertEquals("toString-Methode funktioniert nicht", timer.toString(), "03:02:01");
+        Timer timer1 = new Timer(10, 9, 8);
+        assertEquals("toString-Methode funktioniert nicht", timer1.toString(), "08:09:10");
+        Timer timer2 = new Timer(11,11,11);
+        assertEquals("toString-Methode funktioniert nicht", timer2.toString(), "11:11:11");
     }
 
     @Test

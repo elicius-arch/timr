@@ -49,6 +49,7 @@ public class TimerActivity extends AppCompatActivity {
     private FloatingActionButton end;
     private FloatingActionButton reset;
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -150,6 +151,7 @@ public class TimerActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     public static void createErrorDialog(String message, final AppCompatActivity activity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setMessage(message)
@@ -169,7 +171,7 @@ public class TimerActivity extends AppCompatActivity {
         Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
             // Vibrate for 500 milliseconds
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            v.vibrate(VibrationEffect.createOneShot(10, VibrationEffect.EFFECT_CLICK));
+            v.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
         } else {
             //deprecated in API 26
             v.vibrate(10);

@@ -27,7 +27,23 @@ public class Timer {
         return timer.seconds == seconds && timer.minutes == minutes && timer.hours == hours;
     }
 
+    @Override
     public String toString() {
-        return hours + " : " + minutes + " : " + seconds;
+        String string = "";
+        if (hours / 10 < 1)
+            string += "" + 0 + hours;
+        else
+            string += hours;
+        string += ":";
+        if (minutes / 10 < 1)
+            string += "" + 0 + minutes;
+        else
+            string += minutes;
+        string += ":";
+        if (seconds / 10 < 1)
+            string += "" + 0 + seconds;
+        else
+            string += seconds;
+        return string;
     }
 }
