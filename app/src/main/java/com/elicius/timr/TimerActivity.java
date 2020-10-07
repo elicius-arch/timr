@@ -8,6 +8,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,7 +18,6 @@ import android.os.ResultReceiver;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -136,22 +138,25 @@ public class TimerActivity extends AppCompatActivity {
             return view;
     }
 
-    private void createFinishingDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(R.string.timer_finished))
-                .setTitle(R.string.finished)
-                .setPositiveButton(OK, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        TimerActivity.this.finish();
-                    }
-                });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+    private MediaPlayer playRingTone() {
+        Uri alarmSound =
+                RingtoneManager. getDefaultUri (RingtoneManager.TYPE_ALARM);
+        MediaPlayer mp = MediaPlayer. create (getApplicationContext(), alarmSound);
+        mp.start();
+        return mp;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
+    private static void executeVibrator (AppCompatActivity activity) {
+        Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
+        // Vibrate for 500 milliseconds
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            v.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+        } else {
+            //deprecated in API 26
+            v.vibrate(100);
+        }
+    }
+
     public static void createErrorDialog(String message, final AppCompatActivity activity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setMessage(message)
@@ -168,14 +173,24 @@ public class TimerActivity extends AppCompatActivity {
                 });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-        Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
-            // Vibrate for 500 milliseconds
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            v.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
-        } else {
-            //deprecated in API 26
-            v.vibrate(10);
-        }
+        executeVibrator(activity);
+    }
+
+    private void createFinishingDialog(final MediaPlayer mp) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.timer_finished))
+                .setTitle(R.string.finished)
+                .setPositiveButton(OK, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mp.stop();
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        executeVibrator(this);
     }
 
     protected class TimerResultReceiver extends ResultReceiver {
@@ -192,14 +207,15 @@ public class TimerActivity extends AppCompatActivity {
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             if (resultCode == RUNNING) {
                 if (resultData == null)
-                    throw new NullPointerException();                       //TODO: Abfangen - aber wo?
+                    createErrorDialog(getString(R.string.error_unspecific), TimerActivity.this);
                 actualSeconds = resultData.getInt(SECONDS);
                 actualMinutes = resultData.getInt(MINUTES);
                 actualHours = resultData.getInt(HOURS);
                 drawClock(actualSeconds, actualMinutes, actualHours);
             }
             if (resultCode == FINISHED) {
-                createFinishingDialog();
+                MediaPlayer mp = playRingTone();
+                createFinishingDialog(mp);
                 TimerActivity.this.setUnclickable(play);
                 TimerActivity.this.setUnclickable(stop);
                 TimerActivity.this.setUnclickable(end);
@@ -207,8 +223,6 @@ public class TimerActivity extends AppCompatActivity {
             }
         }
     }
-
-    //TODO: Listener zusammenführen in einen einzigen
 
     private class TimrButtonListener implements View.OnClickListener {
 
@@ -257,13 +271,11 @@ public class TimerActivity extends AppCompatActivity {
         v.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gray)));
         v.refreshDrawableState();
         v.setClickable(false);
-        //TODO: geht nicht. Nimmt nicht die Farbe an
 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setClickable(FloatingActionButton v) {
-        //TODO: geht nicht. Nimmt nicht die Farbe an
         v.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
         v.refreshDrawableState();
         v.setClickable(true);

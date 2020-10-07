@@ -18,4 +18,5 @@
     <string name="delete_text">Soll der Timer %1$s gelöscht werden?</string>
     <string name="quit">Abbrechen</string>
     <string name="double_point">:</string>
+    <string name="error_unspecific">Ein Fehler ist aufgetreten!</string>
 </resources>
