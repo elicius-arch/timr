@@ -13,7 +13,7 @@
     <string name="minutes">Minuten</string>
     <string name="hours">Stunden</string>
     <string name="ok">OK</string>
-    <string name="null_timer">Ein Timer 0:0:0 ist unsinnig!</string>
+    <string name="null_timer">Ein Timer 0:0:0 ist nicht möglich!</string>
     <string name="times_exists">Der Timer %1$s existiert bereits!"</string>
     <string name="delete">Löschen</string>
     <string name="delete_text">Soll der Timer %1$s gelöscht werden?</string>

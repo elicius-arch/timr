@@ -40,7 +40,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    private MyAdapter adapter;
     private SQLHandler sqlHandler;
 
     private List<Timer> dataset;
@@ -129,15 +129,15 @@ public class MainActivity extends AppCompatActivity {
         minute.setGravity(Gravity.CENTER);
         hour.setGravity(Gravity.CENTER);
 
-        ArrayList<Integer> seconds = new ArrayList<Integer>();
+        ArrayList<Integer> seconds = new ArrayList<>();
         for (int i = 0; i <= 59; i++) {
             seconds.add(i);
         }
-        ArrayList<Integer> minutes = new ArrayList<Integer>();
+        ArrayList<Integer> minutes = new ArrayList<>();
         for (int i = 0; i <= 59; i++) {
             minutes.add(i);
         }
-        ArrayList<Integer> hours = new ArrayList<Integer>();
+        ArrayList<Integer> hours = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             hours.add(i);
         }

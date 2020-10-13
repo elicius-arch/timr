@@ -6,7 +6,6 @@
         android:layout_height="wrap_content"
         android:textSize="30sp"
         android:padding="10sp"
-        android:paddingLeft="30sp"
         android:paddingStart="30sp"
         android:paddingEnd="30sp"
         android:gravity="center_vertical"
@@ -16,4 +15,4 @@
         android:focusable="true"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-    xmlns:app="http://schemas.android.com/apk/res-auto" />
+    xmlns:app="http://schemas.android.com/apk/res-auto"/>
