@@ -10,6 +10,10 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class SQLHandler extends SQLiteOpenHelper {
     private static final String TAG = SQLHandler.class.getSimpleName();
     private static final String DATABASE_NAME = "timr.db";
@@ -66,8 +70,8 @@ public class SQLHandler extends SQLiteOpenHelper {
         }
     }
 
-    public Timer[] selectAll() {
-        Timer[] timers = null;
+    public List<Timer> selectAll() {
+        List<Timer> timers = null;
         try {
             SQLiteDatabase db = getWritableDatabase();
             String[] colums = {SECOND, MINUTE, HOUR};
@@ -83,21 +87,20 @@ public class SQLHandler extends SQLiteOpenHelper {
             int secondColIndex = cursor.getColumnIndex(SECOND);
             int minuteColIndex = cursor.getColumnIndex(MINUTE);
             int hourColIndex = cursor.getColumnIndex(HOUR);
-            timers = new Timer[cursor.getCount()];
-            int i = 0;
+            timers = new ArrayList<>();
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 int s = cursor.getInt(secondColIndex);
                 int m = cursor.getInt(minuteColIndex);
                 int h = cursor.getInt(hourColIndex);
-                timers[i] = new Timer(s, m, h);
+                timers.add(new Timer(s, m, h));
                 cursor.moveToNext();
-                i++;
             }
             cursor.close();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
+            Collections.sort(timers);
             return timers;
         }
     }

@@ -1,6 +1,6 @@
 package com.elicius.timr;
 
-public class Timer {
+public class Timer implements Comparable {
     private int seconds;
     private int minutes;
     private int hours;
@@ -45,5 +45,28 @@ public class Timer {
         else
             string += seconds;
         return string;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Timer t = (Timer) o;
+        if (equals(t))
+            return 0;
+        if (t.getHours() > hours)
+            return -1;
+        else
+            if (t.getHours() == hours){
+                if (t.getMinutes() > minutes)
+                    return -1;
+                else
+                    if (t.getMinutes() == minutes) {
+                        if (t.getSeconds() > seconds)
+                            return -1;
+                        else
+                            return 1;
+                    } else
+                        return 1;
+            } else
+                return 1;
     }
 }

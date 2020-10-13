@@ -11,12 +11,14 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 /**
  * Source: https://developer.android.com/guide/topics/ui/layout/recyclerview
  */
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
-    private Timer[] mDataset;
+    private List<Timer> mDataset;
     private MainActivity activity;
 
     // Provide a reference to the views for each data item
@@ -33,7 +35,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(Timer[] myDataset, MainActivity activity) {
+    public MyAdapter(List<Timer> myDataset, MainActivity activity) {
         mDataset = myDataset;
         this.activity = activity;
     }
@@ -54,9 +56,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public void onBindViewHolder(MyViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.textView.setText(mDataset[position].toString());
-        holder.textView.setOnClickListener(new ViewClickListener(mDataset[position]));
-        holder.textView.setOnLongClickListener(new ViewLongClickListener(mDataset[position]));
+        Timer t = mDataset.get(position);
+        holder.textView.setText(t.toString());
+        holder.textView.setOnClickListener(new ViewClickListener(t));
+        holder.textView.setOnLongClickListener(new ViewLongClickListener(t));
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -65,7 +68,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         if (mDataset == null)
             return 0;
         else
-            return mDataset.length;
+            return mDataset.size();
     }
 
     private class ViewClickListener implements View.OnClickListener {
@@ -121,17 +124,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             return false;
         }
         private void deleteTimerFromList(Timer timer) {
-            Timer[] dataset = MyAdapter.this.mDataset;
-            Timer[] newDataset = new Timer[dataset.length - 1];
-            int i = 0;
-            for (Timer t : dataset) {
-                if (!t.equals(timer)) {
-                    newDataset[i] = t;
-                    i++;
-                }
-            }
-            MyAdapter.this.mDataset=  newDataset;
-            activity.setDataset(newDataset);
+            mDataset.remove(timer);
             MyAdapter.this.notifyDataSetChanged();
             SQLHandler sqlHandler = activity.getSQLHandler();
             sqlHandler.deleteTimer(timer);

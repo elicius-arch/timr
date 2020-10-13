@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -26,6 +27,7 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListPopupWindow;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -33,6 +35,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     private SQLHandler sqlHandler;
 
-    private Timer[] dataset;
+    private List<Timer> dataset;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +125,9 @@ public class MainActivity extends AppCompatActivity {
         second.setContentDescription(getString(R.string.seconds));
         minute.setContentDescription(getString(R.string.minutes));
         hour.setContentDescription(getString(R.string.hours));
+        second.setGravity(Gravity.CENTER);
+        minute.setGravity(Gravity.CENTER);
+        hour.setGravity(Gravity.CENTER);
 
         ArrayList<Integer> seconds = new ArrayList<Integer>();
         for (int i = 0; i <= 59; i++) {
@@ -164,17 +170,10 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
 
-                    if (dataset != null) {
-                        Timer[] datasetCopy = dataset.clone();
-                        dataset = new Timer[dataset.length + 1];
-                        for (int i = 0; i < datasetCopy.length; i++) {
-                            dataset[i] = datasetCopy[i];
-                        }
-                        dataset[dataset.length - 1] = timer;
-                    } else {
-                        dataset = new Timer[1];
-                        dataset[0] = timer;
+                    if (dataset == null) {
+                        dataset = new ArrayList<>();
                     }
+                    dataset.add(timer);
                     sqlHandler.insertOne(timer);
                     adapter = new MyAdapter(dataset, MainActivity.this);
                     recyclerView.setAdapter(adapter);
@@ -192,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
         return sqlHandler;
     }
 
-    public void setDataset(Timer[] timers) {
+    public void setDataset(List<Timer> timers) {
         dataset = timers;
     }
 }

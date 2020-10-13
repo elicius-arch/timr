@@ -5,9 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
+ * Testklasse der zentralen Klasse Timer
  */
 public class TestTimr {
     @Test
@@ -17,6 +15,23 @@ public class TestTimr {
         Timer timer3 = new Timer(1, 2, 4);
         assertTrue(timer1.equals(timer2));
         assertFalse(timer1.equals(timer3));
+    }
+
+    @Test
+    public void testCompareTo() {
+        Timer t1 = new Timer(1,1,1);
+        // t1 größer
+        assertEquals("compareTo-Methode funktioniert nicht", t1.compareTo(new Timer(1,1,0)), 1);
+        assertEquals("compareTo-Methode funktioniert nicht", t1.compareTo(new Timer(1,0,1)), 1);
+        assertEquals("compareTo-Methode funktioniert nicht", t1.compareTo(new Timer(0,1,1)), 1);
+
+        // t1 gleich
+        assertEquals("compareTo-Methode funktioniert nicht", t1.compareTo(new Timer(1,1,1)), 0);
+
+        // t1 kleiner
+        assertEquals("compareTo-Methode funktioniert nicht", t1.compareTo(new Timer(1,1,2)), -1);
+        assertEquals("compareTo-Methode funktioniert nicht", t1.compareTo(new Timer(1,2,1)), -1);
+        assertEquals("compareTo-Methode funktioniert nicht", t1.compareTo(new Timer(2,1,1)), -1);
     }
 
     @Test

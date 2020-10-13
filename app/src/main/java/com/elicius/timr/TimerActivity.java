@@ -85,7 +85,6 @@ public class TimerActivity extends AppCompatActivity {
     }
 
     void drawClock(int seconds, int minutes, int hours) {
-        //TODO: Ressourcestrings with placeholders
         hours1.setText("" + (hours / 10));
         hours2.setText("" + (hours % 10));
         minutes1.setText("" + (minutes / 10));
@@ -139,9 +138,9 @@ public class TimerActivity extends AppCompatActivity {
     }
 
     private MediaPlayer playRingTone() {
-        Uri alarmSound =
-                RingtoneManager. getDefaultUri (RingtoneManager.TYPE_ALARM);
-        MediaPlayer mp = MediaPlayer. create (getApplicationContext(), alarmSound);
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        MediaPlayer mp = MediaPlayer.create(getApplicationContext(), alarmSound);
+        mp.setLooping(true);
         mp.start();
         return mp;
     }
