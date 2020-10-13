@@ -8,6 +8,7 @@
     <string name="error">Fehler</string>
     <string name="finished">Ende</string>
     <string name="new_timr">Erstellen Sie einen neuen Timer</string>
+    <string name="new_timr_created">Neuer Timer wurde erstellt</string>
     <string name="seconds">Sekunden</string>
     <string name="minutes">Minuten</string>
     <string name="hours">Stunden</string>

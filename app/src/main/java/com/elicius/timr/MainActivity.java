@@ -160,38 +160,34 @@ public class MainActivity extends AppCompatActivity {
                 if (s == 0 && m == 0 && h == 0) {
                     TimerActivity.createErrorDialog(MainActivity.this.getString(R.string.null_timer), MainActivity.this);
                 } else {
-
                     Timer timer = new Timer(s, m, h);
-
-                    for (Timer t : dataset) {
-                        if (t.equals(timer)) {
-                            TimerActivity.createErrorDialog(getString(R.string.times_exists, timer.toString()), MainActivity.this);
-                            return;
-                        }
-                    }
 
                     if (dataset == null) {
                         dataset = new ArrayList<>();
+                    } else {
+                        for (Timer t : dataset) {
+                            if (t.equals(timer)) {
+                                TimerActivity.createErrorDialog(getString(R.string.times_exists, timer.toString()), MainActivity.this);
+                                return;
+                            }
+                        }
                     }
+
                     dataset.add(timer);
+                    Collections.sort(dataset);
                     sqlHandler.insertOne(timer);
                     adapter = new MyAdapter(dataset, MainActivity.this);
                     recyclerView.setAdapter(adapter);
-                    Toast toast = Toast.makeText(MainActivity.this, "neuen Timer erstellt", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(MainActivity.this, getString(R.string.new_timr_created), Toast.LENGTH_SHORT);
                     toast.show();
                     dialog.dismiss();
                 }
             }
         });
-
         dialog.show();
     }
 
     public SQLHandler getSQLHandler() {
         return sqlHandler;
-    }
-
-    public void setDataset(List<Timer> timers) {
-        dataset = timers;
     }
 }
